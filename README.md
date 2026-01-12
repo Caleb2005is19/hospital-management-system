@@ -124,8 +124,8 @@ PROPRIETARY LICENSE AGREEMENT
 
 Copyright (c) 2026 Caleb. All Rights Reserved.
 
-NOTICE:  All information contained herein is, and remains the property of [Your Name]. 
-The intellectual and technical concepts contained herein are proprietary to [Your Name] 
+NOTICE:  All information contained herein is, and remains the property of Caleb Nyabuto. 
+The intellectual and technical concepts contained herein are proprietary to Caleb Nyabuto
 and may be covered by patents or patents in process, and are protected by trade secret or copyright law.
 
 Dissemination of this information, reproduction of this material, or use of this software 
