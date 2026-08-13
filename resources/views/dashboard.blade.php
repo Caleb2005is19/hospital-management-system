@@ -6,7 +6,7 @@
     </x-slot>
 
     <div class="p-6 text-gray-900">
-        <h3 class="text-lg font-bold mb-4">📅 Book an Appointment</h3>
+        <h3 class="text-lg font-bold mb-4">📅 Book an Appointment Today</h3>
 
         @if(session()->has('message'))
         <div class="alert alert-success bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4">
