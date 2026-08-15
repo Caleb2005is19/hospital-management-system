@@ -1,75 +1,102 @@
 <x-app-layout>
-    <div class="py-12">
-        <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-8">
+    <div class="max-w-4xl mx-auto space-y-6">
+        
+        <!-- Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-4">
+            <div>
+                <h1 class="text-xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
+                    <span>👨‍⚕️</span> Add Hospital Employee / Clinician
+                </h1>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Register staff members, assign clinical roles and configure access credentials</p>
+            </div>
+            <a href="{{ route('dashboard') }}" class="text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition">
+                ← Back to Dashboard
+            </a>
+        </div>
 
-                <h2 class="text-2xl font-bold mb-6 text-gray-800">👤 Register New Hospital Staff</h2>
+        <!-- Success/Error Feedback -->
+        @if(session()->has('message'))
+            <div class="p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 text-xs font-semibold">
+                ✓ {{ session()->get('message') }}
+            </div>
+        @endif
 
-                @if(session()->has('message'))
-                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-                    {{ session()->get('message') }}
-                </div>
-                @endif
+        @if($errors->any())
+            <div class="p-4 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-300 text-xs font-semibold">
+                ⚠️ {{ $errors->first() }}
+            </div>
+        @endif
 
-                <form action="{{ url('upload_doctor') }}" method="POST">
-                    @csrf
+        <!-- Add Staff Form -->
+        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
+            <form action="{{ route('employees.store') }}" method="POST" class="space-y-4">
+                @csrf
 
-                    <div class="grid grid-cols-2 gap-4 mb-4">
-                        <div>
-                            <label class="block text-gray-700 text-sm font-bold mb-2">Full Name</label>
-                            <input type="text" name="name" class="w-full border rounded p-2" required placeholder="John Doe">
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 text-sm font-bold mb-2">Phone Number</label>
-                            <input type="number" name="phone" class="w-full border rounded p-2" required placeholder="0712345678">
-                        </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1">
+                            Full Name *
+                        </label>
+                        <input type="text" name="name" placeholder="Dr. John Doe / Nurse Jane" required
+                            class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-xs text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 focus:outline-none">
                     </div>
 
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-bold mb-2">Email Address</label>
-                        <input type="email" name="email" class="w-full border rounded p-2" required placeholder="email@hospital.com">
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1">
+                            Email Address (Login Username) *
+                        </label>
+                        <input type="email" name="email" placeholder="staff@hospital.co.ke" required
+                            class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-xs text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 focus:outline-none">
                     </div>
 
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-bold mb-2">Employee Role</label>
-                        <select name="usertype" class="w-full border rounded p-2 bg-gray-50" required>
-                            <option value="">-- Select Role --</option>
-                            <option value="doctor">👨‍⚕️ Doctor</option>
-                            <option value="nurse">👩‍⚕️ Nurse</option>
-                            <option value="pharmacist">💊 Pharmacist</option>
-                            <option value="receptionist">📂 Receptionist / Records</option>
-                            <option value="cashier">💰 Cashier</option>
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1">
+                            Phone Number *
+                        </label>
+                        <input type="text" name="phone" placeholder="+254 700 000 000" required
+                            class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-xs text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1">
+                            System Role (Usertype) *
+                        </label>
+                        <select name="usertype" required
+                            class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-xs font-bold text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                            <option value="doctor">Medical Doctor / Clinician</option>
+                            <option value="nurse">Nurse / Triage Officer</option>
+                            <option value="pharmacist">Pharmacist</option>
+                            <option value="lab_tech">Laboratory Technologist</option>
+                            <option value="cashier">Cashier / Billing Clerk</option>
+                            <option value="receptionist">Receptionist</option>
+                            <option value="admin">Hospital Administrator</option>
                         </select>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-4 mb-4">
-                        <div>
-                            <label class="block text-gray-700 text-sm font-bold mb-2">Department / Ward</label>
-                            <select name="department" class="w-full border rounded p-2">
-                                <option value="">-- None --</option>
-                                <option value="General Ward">General Ward</option>
-                                <option value="ICU">ICU</option>
-                                <option value="Maternity">Maternity</option>
-                                <option value="Outpatient">Outpatient</option>
-                            </select>
-                            <p class="text-xs text-gray-500 mt-1">Required for Nurses & Doctors</p>
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 text-sm font-bold mb-2">Room Number (Doctors)</label>
-                            <input type="text" name="room" class="w-full border rounded p-2" placeholder="e.g. Room 101">
-                        </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1">
+                            Clinical Department (Optional)
+                        </label>
+                        <input type="text" name="department" placeholder="OPD, Maternity, Pharmacy, Lab, ICU"
+                            class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-xs text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 focus:outline-none">
                     </div>
 
-                    <div class="mb-6">
-                        <label class="block text-gray-700 text-sm font-bold mb-2">Assign Password</label>
-                        <input type="password" name="password" class="w-full border rounded p-2" required placeholder="********">
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1">
+                            Account Password *
+                        </label>
+                        <input type="password" name="password" placeholder="••••••••" required minlength="6"
+                            class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-xs text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 focus:outline-none">
                     </div>
+                </div>
 
-                    <button type="submit" class="w-full bg-blue-800 text-white font-bold py-3 rounded hover:bg-blue-900 shadow-lg">
-                        💾 Create Employee Account
+                <div class="flex justify-end pt-3">
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs px-5 py-2.5 rounded-xl shadow-sm transition">
+                        Save & Activate Employee 👤✓
                     </button>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
+
     </div>
 </x-app-layout>

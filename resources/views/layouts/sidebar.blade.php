@@ -1,97 +1,204 @@
-<div class="flex h-screen bg-gray-100">
-    <div class="hidden md:flex flex-col w-64 bg-white border-r">
-        <div class="flex items-center justify-center h-16 border-b">
-            <span class="text-xl font-bold text-blue-600">🏥 HMS Pro</span>
-        </div>
-        <div class="flex flex-col flex-grow p-4 overflow-y-auto">
-            <nav class="flex-1 space-y-2">
+<!-- Mobile Drawer Backdrop -->
+<div
+    x-show="sidebarOpen"
+    x-cloak
+    @click="sidebarOpen = false"
+    x-transition.opacity
+    class="fixed inset-0 z-[9998] bg-black/60 lg:hidden"
+></div>
 
-                <a href="{{ url('/home') }}" class="flex items-center px-4 py-2 text-gray-700 bg-gray-100 rounded-md">
-                    <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
-                    </svg>
-                    Dashboard
-                </a>
+<!-- Sidebar -->
+<aside
+    x-cloak
+    :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'"
+    class="fixed inset-y-0 left-0 z-[9999]
+           w-64 max-w-[85vw]
+           bg-slate-900 text-slate-300
+           flex flex-col
+           border-r border-slate-800
+           shadow-2xl
+           overflow-hidden
+           transition-transform duration-200 ease-in-out
+           lg:static lg:z-auto lg:shadow-none lg:shrink-0"
+>
 
-                @if(Auth::user()->usertype == 'patient')
-                <a href="{{ url('/home') }}" class="flex items-center px-4 py-2 text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-md">
-                    <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                    My Appointments
-                </a>
-                @endif
-                @if(Auth::user()->usertype == 'nurse')
-                <a href="{{ url('/bed_management') }}" class="flex items-center px-4 py-2 text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-md">
-                    <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
-                    </svg>
-                    🛏️ Manage Wards
-                </a>
-                @endif
-                @if(Auth::user()->usertype == 'admin')
-                <a href="{{ url('/add_doctor_view') }}" class="flex items-center px-4 py-2 text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-md">
-                    <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
-                    </svg>
-                    Add Employees
-                </a>
-                @endif
+    <!-- Brand -->
+    <div class="h-16 min-h-16 flex items-center justify-between px-4 border-b border-slate-800 bg-slate-950">
 
-                @if(Auth::user()->usertype == 'nurse')
-                <a href="{{ url('/triage_queue') }}" class="flex items-center px-4 py-2 text-gray-600 hover:bg-purple-50 hover:text-purple-600 rounded-md">
-                    <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                    </svg>
-                    🩺 Triage Queue
-                </a>
-                @endif
+        <a href="{{ route('dashboard') }}" class="flex items-center gap-2.5 min-w-0">
+            <div class="w-9 h-9 rounded-lg bg-blue-600 flex items-center justify-center text-white text-lg shrink-0">
+                🏥
+            </div>
 
+            <div class="min-w-0">
+                <div class="font-bold text-sm text-white leading-tight truncate">
+                    LifeCare HMIS
+                </div>
+                <div class="text-[9px] text-blue-400 font-bold uppercase tracking-wider">
+                    Hospital Platform
+                </div>
+            </div>
+        </a>
 
-                @if(Auth::user()->usertype == 'nurse')
-                <a href="{{ url('/shift_reports') }}" class="flex items-center px-4 py-2 text-gray-600 hover:bg-purple-50 hover:text-purple-600 rounded-md">
-                    <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
-                    </svg>
-                    Shift Handover
-                </a>
-                @endif
+        <!-- Mobile Close -->
+        <button
+            type="button"
+            @click="sidebarOpen = false"
+            class="lg:hidden w-8 h-8 flex items-center justify-center
+                   rounded-lg bg-slate-800 text-slate-300
+                   hover:bg-slate-700 hover:text-white shrink-0"
+        >
+            ✕
+        </button>
 
-                @if(Auth::user()->usertype == 'doctor')
-                <a href="{{ url('/home') }}" class="flex items-center px-4 py-2 text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-md">
-                    <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
-                    </svg>
-                    Patients Queue
-                </a>
-                @endif
-
-                <form method="POST" action="{{ route('logout') }}" class="mt-auto">
-                    @csrf
-                    <button type="submit" class="flex items-center w-full px-4 py-2 mt-8 text-gray-600 hover:bg-red-50 hover:text-red-600 rounded-md">
-                        <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-                        </svg>
-                        Logout
-                    </button>
-                </form>
-
-            </nav>
-        </div>
     </div>
 
-    <div class="flex flex-col flex-1 overflow-hidden">
-        <header class="flex items-center justify-between px-6 py-4 bg-white border-b lg:hidden">
-            <span class="text-xl font-bold text-blue-600">🏥 HMS</span>
-            <button class="text-gray-500 focus:outline-none">
-                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                </svg>
-            </button>
-        </header>
+    <!-- Navigation -->
+    <nav class="flex-1 min-h-0 overflow-y-auto px-3 py-4 space-y-1 text-sm font-semibold">
 
-        <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6">
-            {{ $slot }}
-        </main>
+        <!-- CORE -->
+        <div class="px-3 py-2 text-[10px] font-black uppercase tracking-wider text-slate-500">
+            Core Portal
+        </div>
+
+        <a href="{{ route('dashboard') }}"
+           class="flex items-center gap-3 px-3 py-3 rounded-xl transition
+           {{ request()->routeIs('dashboard') || request()->is('home')
+                ? 'bg-blue-600 text-white font-bold'
+                : 'hover:bg-slate-800 hover:text-white' }}">
+            <span>📊</span>
+            <span>Dashboard</span>
+        </a>
+
+
+        <!-- CLINICAL -->
+        <div class="pt-4 px-3 py-2 text-[10px] font-black uppercase tracking-wider text-slate-500">
+            Clinical Workflow
+        </div>
+
+        <a href="{{ route('patients.index') }}"
+           class="flex items-center gap-3 px-3 py-3 rounded-xl transition
+           {{ request()->routeIs('patients.*')
+                ? 'bg-blue-600 text-white font-bold'
+                : 'hover:bg-slate-800 hover:text-white' }}">
+            <span>📇</span>
+            <span>Reception & Patients</span>
+        </a>
+
+        <a href="{{ route('triage.index') }}"
+           class="flex items-center gap-3 px-3 py-3 rounded-xl transition
+           {{ request()->routeIs('triage.*')
+                ? 'bg-blue-600 text-white font-bold'
+                : 'hover:bg-slate-800 hover:text-white' }}">
+            <span>🩺</span>
+            <span>Triage Desk</span>
+        </a>
+
+        <a href="{{ route('doctor.queue') }}"
+           class="flex items-center gap-3 px-3 py-3 rounded-xl transition
+           {{ request()->routeIs('doctor.*')
+                ? 'bg-blue-600 text-white font-bold'
+                : 'hover:bg-slate-800 hover:text-white' }}">
+            <span>👨‍⚕️</span>
+            <span>Doctor Consultation</span>
+        </a>
+
+        <a href="{{ route('lab.index') }}"
+           class="flex items-center gap-3 px-3 py-3 rounded-xl transition
+           {{ request()->routeIs('lab.*')
+                ? 'bg-blue-600 text-white font-bold'
+                : 'hover:bg-slate-800 hover:text-white' }}">
+            <span>🧪</span>
+            <span>Laboratory</span>
+        </a>
+
+        <a href="{{ route('pharmacy.index') }}"
+           class="flex items-center gap-3 px-3 py-3 rounded-xl transition
+           {{ request()->routeIs('pharmacy.*')
+                ? 'bg-blue-600 text-white font-bold'
+                : 'hover:bg-slate-800 hover:text-white' }}">
+            <span>💊</span>
+            <span>Pharmacy & Dispensary</span>
+        </a>
+
+
+        <!-- FINANCE -->
+        <div class="pt-4 px-3 py-2 text-[10px] font-black uppercase tracking-wider text-slate-500">
+            Finance & Admin
+        </div>
+
+        <a href="{{ route('billing.index') }}"
+           class="flex items-center gap-3 px-3 py-3 rounded-xl transition
+           {{ request()->routeIs('billing.*')
+                ? 'bg-blue-600 text-white font-bold'
+                : 'hover:bg-slate-800 hover:text-white' }}">
+            <span>💳</span>
+            <span>Billing & Cashier</span>
+        </a>
+
+        <a href="{{ route('revenue.index') }}"
+           class="flex items-center gap-3 px-3 py-3 rounded-xl transition
+           {{ request()->routeIs('revenue.*')
+                ? 'bg-indigo-600 text-white font-bold'
+                : 'hover:bg-slate-800 hover:text-indigo-300' }}">
+            <span>🛡️</span>
+            <span>Revenue Control Center</span>
+        </a>
+
+        @if(Route::has('employees.create'))
+            <a href="{{ route('employees.create') }}"
+               class="flex items-center gap-3 px-3 py-3 rounded-xl transition
+               {{ request()->routeIs('employees.*')
+                    ? 'bg-blue-600 text-white font-bold'
+                    : 'hover:bg-slate-800 hover:text-white' }}">
+                <span>👥</span>
+                <span>Staff Management</span>
+            </a>
+        @endif
+
+    </nav>
+
+
+    <!-- User Profile -->
+    <div class="p-3 border-t border-slate-800 bg-slate-950 shrink-0">
+
+        <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-900">
+
+            <div class="flex items-center gap-2 min-w-0">
+
+                <div class="w-8 h-8 rounded-lg bg-blue-600/20 text-blue-400
+                            font-bold flex items-center justify-center text-xs shrink-0">
+                    {{ strtoupper(substr(Auth::user()->name ?? 'U', 0, 1)) }}
+                </div>
+
+                <div class="min-w-0">
+                    <p class="text-xs font-bold text-white truncate">
+                        {{ Auth::user()->name ?? 'Staff' }}
+                    </p>
+
+                    <p class="text-[10px] text-slate-400 truncate">
+                        {{ Auth::user()->email ?? 'Active' }}
+                    </p>
+                </div>
+
+            </div>
+
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+
+                <button
+                    type="submit"
+                    title="Logout"
+                    class="w-8 h-8 flex items-center justify-center
+                           text-slate-400 hover:text-rose-400
+                           hover:bg-slate-800 rounded-lg transition"
+                >
+                    🚪
+                </button>
+            </form>
+
+        </div>
+
     </div>
-</div>
+
+</aside>
