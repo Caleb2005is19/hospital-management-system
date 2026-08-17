@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Encounter extends Model
 {
+    use HasFactory;
+
     protected $guarded = [];
 
     // Encounter belongs to a patient
@@ -25,24 +28,29 @@ class Encounter extends Model
     {
         return $this->belongsTo(User::class, 'assigned_doctor_id');
     }
-  public function consultation()
-{
-    return $this->hasOne(Consultation::class);
-}
-  public function labOrders()
-{
-    return $this->hasMany(LabOrder::class);
-}
-public function prescriptions()
-{
-    return $this->hasMany(Prescription::class);
-}
-  public function invoice()
-{
-    return $this->hasOne(Invoice::class);
-}
 
+    public function consultation()
+    {
+        return $this->hasOne(Consultation::class);
+    }
 
+    public function labOrders()
+    {
+        return $this->hasMany(LabOrder::class);
+    }
 
+    public function prescriptions()
+    {
+        return $this->hasMany(Prescription::class);
+    }
+
+    public function invoice()
+    {
+        return $this->hasOne(Invoice::class);
+    }
+
+    public function charges()
+    {
+        return $this->hasMany(PatientCharge::class, 'encounter_id');
+    }
 }
-

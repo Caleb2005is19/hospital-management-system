@@ -18,9 +18,43 @@ use Illuminate\Support\Facades\DB;
 class BillingController extends Controller
 {
     // Main Billing & Cashier Desk
-    public function index()
+        public function index()
     {
         $activeSession = CashierSessionService::getActiveSession(Auth::id());
+
+        // 1. Auto-create Invoices for any encounter that has active charges but no invoice yet
+        $encountersWithCharges = Encounter::whereHas('charges', function ($q) {
+            $q->where('status', '!=', 'reversed');
+        })->doesntHave('invoice')->get();
+
+        foreach ($encountersWithCharges as $enc) {
+            $total = PatientCharge::where('encounter_id', $enc->id)
+                ->where('status', '!=', 'reversed')
+                ->sum('total_price');
+
+            Invoice::create([
+                'encounter_id'   => $enc->id,
+                'invoice_number' => 'INV-' . date('Ymd') . '-' . strtoupper(substr(uniqid(), -4)),
+                'status'         => 'unpaid',
+                'total_amount'   => $total,
+                'amount_paid'    => 0.00,
+                'consultation_fee' => 0.00,
+                'lab_total'        => 0.00,
+                'pharmacy_total'   => 0.00,
+            ]);
+        }
+
+        // 2. Refresh total_amount on issued/unpaid invoices if new charges were added
+        $activeInvoices = Invoice::where('status', '!=', 'paid')->get();
+        foreach ($activeInvoices as $inv) {
+            $freshTotal = PatientCharge::where('encounter_id', $inv->encounter_id)
+                ->where('status', '!=', 'reversed')
+                ->sum('total_price');
+
+            if ($inv->total_amount != $freshTotal) {
+                $inv->update(['total_amount' => $freshTotal]);
+            }
+        }
 
         $invoices = Invoice::with(['encounter.patient', 'payments'])
             ->latest()
@@ -32,7 +66,6 @@ class BillingController extends Controller
         $unpaidTotal = max(0, $totalBilled - $totalCollected);
         $pendingCount = Invoice::where('status', '!=', 'paid')->count();
 
-        // Previous closed sessions for auditing
         $pastSessions = CashierSession::with('user')->latest('opened_at')->take(10)->get();
 
         return view('billing.index', compact('invoices', 'activeSession', 'totalCollected', 'unpaidTotal', 'pendingCount', 'pastSessions'));
@@ -97,7 +130,7 @@ class BillingController extends Controller
             ['encounter_id' => $encounter->id],
             [
                 'invoice_number' => 'INV-' . date('Ymd') . '-' . strtoupper(substr(uniqid(), -4)),
-                'status' => 'issued',
+                'status' => 'unpaid',
                 'total_amount' => $totalCharges,
                 'amount_paid' => 0.00,
                 'created_by' => Auth::id(),

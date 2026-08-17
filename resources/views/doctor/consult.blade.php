@@ -283,4 +283,20 @@
                                     <span class="text-slate-400 text-[10px]">{{ $past->created_at->format('d M Y') }}</span>
                                 </div>
                                 <div class="text-slate-900 font-semibold text-[11px]">
-                    
+                                                        {{ $past->consultation?->provisional_diagnosis ?? 'No diagnosis documented' }}
+                                </div>
+                                <p class="text-[10px] text-slate-500 line-clamp-2">
+                                    {{ $past->consultation?->doctor_notes ?? 'No notes recorded.' }}
+                                </p>
+                            </div>
+                        @empty
+                            <div class="p-4 text-center text-slate-400 text-xs italic">
+                                No previous medical history recorded.
+                            </div>
+                        @endforelse
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</x-app-layout>
