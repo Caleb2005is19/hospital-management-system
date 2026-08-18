@@ -11,32 +11,19 @@ class Encounter extends Model
 
     protected $guarded = [];
 
-    // Encounter belongs to a patient
     public function patient()
     {
         return $this->belongsTo(Patient::class);
     }
 
-    // Encounter has one triage record
-    public function triage()
+    public function vitals()
     {
-        return $this->hasOne(Triage::class);
+        return $this->hasMany(Vital::class);
     }
 
-    // Doctor assigned
-    public function doctor()
+    public function consultations()
     {
-        return $this->belongsTo(User::class, 'assigned_doctor_id');
-    }
-
-    public function consultation()
-    {
-        return $this->hasOne(Consultation::class);
-    }
-
-    public function labOrders()
-    {
-        return $this->hasMany(LabOrder::class);
+        return $this->hasMany(Consultation::class);
     }
 
     public function prescriptions()
@@ -44,13 +31,23 @@ class Encounter extends Model
         return $this->hasMany(Prescription::class);
     }
 
-    public function invoice()
+    public function labOrders()
     {
-        return $this->hasOne(Invoice::class);
+        return $this->hasMany(LabOrder::class);
     }
 
     public function charges()
     {
         return $this->hasMany(PatientCharge::class, 'encounter_id');
+    }
+
+    public function patientCharges()
+    {
+        return $this->hasMany(PatientCharge::class, 'encounter_id');
+    }
+
+    public function invoice()
+    {
+        return $this->hasOne(Invoice::class, 'encounter_id');
     }
 }

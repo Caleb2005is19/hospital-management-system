@@ -119,8 +119,27 @@ class PharmacyController extends Controller
                 ->where('status', 'pending')
                 ->exists();
 
+            
+            // 6. Push invoice update to Billing Desk immediately
+            $totalCharges = \App\Models\PatientCharge::where("encounter_id", $prescription->encounter_id)
+                ->where("status", "!=", "reversed")
+                ->sum("total_price");
+
+            Invoice::updateOrCreate(
+                ["encounter_id" => $prescription->encounter_id],
+                [
+                    "invoice_number"   => "INV-" . date("Ymd") . "-" . strtoupper(substr(uniqid(), -4)),
+                    "status"           => "unpaid",
+                    "total_amount"     => $totalCharges,
+                    "amount_paid"      => 0.00,
+                    "consultation_fee" => 0.00,
+                    "lab_total"        => 0.00,
+                    "pharmacy_total"   => $totalCharges,
+                ]
+            );
+
             if (!$hasPending) {
-                $prescription->encounter->update(['status' => 'waiting_billing']);
+                $prescription->encounter->update(['status' => 'discharged']);
             }
         });
 
