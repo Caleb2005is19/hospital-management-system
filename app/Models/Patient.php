@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Patient extends Model
 {
+    public function vitals() { return $this->hasMany(\App\Models\Vital::class, 'patient_id')->latest(); }
+
     protected $guarded = [];
 
     // A patient can have many encounters over time

@@ -7,6 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Encounter extends Model
 {
+    public function doctor()
+    {
+        return $this->belongsTo(\App\Models\User::class, 'doctor_id')->withDefault([
+            'name' => 'Attending Clinician'
+        ]);
+    }
+
     use HasFactory;
 
     protected $guarded = [];
@@ -14,11 +21,6 @@ class Encounter extends Model
     public function patient()
     {
         return $this->belongsTo(Patient::class);
-    }
-
-    public function vitals()
-    {
-        return $this->hasMany(Vital::class);
     }
 
     public function triage()

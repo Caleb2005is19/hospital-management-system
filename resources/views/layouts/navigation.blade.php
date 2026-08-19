@@ -20,7 +20,7 @@
                        class="px-3 py-2 rounded-lg transition {{ request()->routeIs('dashboard') || request()->is('home') ? 'bg-slate-800 text-white font-bold' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                         Dashboard
                     </a>
-                    <a href="{{ route('patients.index') }}" 
+                    <a href="{{ route('ehr.index') }}" 
                        class="px-3 py-2 rounded-lg transition {{ request()->routeIs('patients.*') ? 'bg-slate-800 text-white font-bold' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                         Reception
                     </a>
@@ -102,7 +102,7 @@
                class="flex items-center gap-2 px-3 py-2.5 rounded-lg {{ request()->routeIs('dashboard') || request()->is('home') ? 'bg-blue-600 text-white font-bold' : 'text-slate-300 hover:bg-slate-800' }}">
                 <span>📊</span> Dashboard
             </a>
-            <a href="{{ route('patients.index') }}" 
+            <a href="{{ route('ehr.index') }}" 
                class="flex items-center gap-2 px-3 py-2.5 rounded-lg {{ request()->routeIs('patients.*') ? 'bg-blue-600 text-white font-bold' : 'text-slate-300 hover:bg-slate-800' }}">
                 <span>📇</span> Reception
             </a>

@@ -17,7 +17,19 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
             <!-- LEFT: Search & Patient List (2 cols) -->
-            <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-md border border-gray-100">
+            
+<!-- Dedicated Patient Medical Records Shortcut -->
+<div class="mb-4 bg-blue-50 border border-blue-200 rounded-xl p-4 flex justify-between items-center shadow-sm">
+    <div>
+        <h2 class="text-sm font-bold text-blue-900">📋 Medical Records Archive</h2>
+        <p class="text-xs text-blue-600">Lookup patient longitudinal charts, vitals & past prescriptions.</p>
+    </div>
+    <a href="{{ route('ehr.index') }}" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg shadow">
+        Search Medical Records →
+    </a>
+</div>
+
+<div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-md border border-gray-100">
                 <h3 class="text-lg font-bold text-gray-800 mb-4">🔍 Search Existing Patient</h3>
                 
                 <form method="GET" action="{{ route('patients.index') }}" class="flex gap-2 mb-6">

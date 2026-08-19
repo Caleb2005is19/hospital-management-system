@@ -96,3 +96,38 @@ Route::get('/print_pdf/{id}', [HomeController::class, 'print_pdf'])->name('print
 require __DIR__ . '/auth.php';
 
 Route::put('/lab/order/{id}', [\App\Http\Controllers\LabController::class, 'update'])->name('lab.update')->middleware(['auth']);
+
+// Longitudinal Patient Medical Records / EHR
+Route::middleware(['auth'])->group(function () {
+    Route::get('/patient-records', [\App\Http\Controllers\PatientHistoryController::class, 'index'])->name('ehr.index');
+    Route::get('/patient-records/{id}/history', [\App\Http\Controllers\PatientHistoryController::class, 'show'])->name('patients.history');
+    Route::get('/api/patients/{id}/history', [\App\Http\Controllers\PatientHistoryController::class, 'apiHistory'])->name('patients.api.history');
+});
+
+// Direct Manual Download Route
+Route::get('/download-manual', function () {
+    $content = "HOSPITAL MANAGEMENT SYSTEM (HMS) & EHR MANUAL\n"
+             . "Version: 2.4.0-PROD | Laravel 12 / PHP 8.5\n\n"
+             . "1. SYSTEM OVERVIEW:\n"
+             . "The platform coordinates Reception, Triage, Doctor, Laboratory, Pharmacy, Billing, and EHR.\n\n"
+             . "2. WORKFLOW LIFECYCLE:\n"
+             . "Reception (/patients) -> Triage (/triage) -> Doctor (/doctor/queue) -> Lab & Pharmacy -> Billing (/billing) -> EHR (/patient-records)\n\n"
+             . "3. ROLE ACCESS MATRIX:\n"
+             . "- Receptionist: Register walk-ins, search returning patients, check-in.\n"
+             . "- Nurse: Capture BP, Temp, Pulse, SpO2, and Weight.\n"
+             . "- Doctor: Clinical review, diagnoses, diagnostic lab orders, electronic prescriptions.\n"
+             . "- Laboratory: Specimen collection, result logging, diagnostic reporting.\n"
+             . "- Pharmacy: Stock verification, prescription dispensing, OTC point-of-sale.\n"
+             . "- Cashier: Invoice consolidation, Cash/M-Pesa payment collection, official receipts.\n"
+             . "- Admin: Staff management (/employees) and revenue adjustments (/revenue-control).\n\n"
+             . "4. QUICK TROUBLESHOOTING:\n"
+             . "- 419 Page Expired: Press Ctrl+F5, re-login.\n"
+             . "- 500 / Blank Screen: Run 'php artisan optimize:clear' in terminal.\n"
+             . "- Patient missing in Doctor room: Ensure triage vitals were submitted.\n"
+             . "- SQLite Database Locked: Reduce concurrent writes and retry after 5s.\n";
+
+    return response($content)
+        ->header('Content-Type', 'application/msword')
+        ->header('Content-Disposition', 'attachment; filename="HMS_Operations_Manual.doc"');
+})->middleware(['auth']);
+require __DIR__.'/manual.php';
