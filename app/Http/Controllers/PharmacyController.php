@@ -132,14 +132,13 @@ class PharmacyController extends Controller
                     "status"           => "unpaid",
                     "total_amount"     => $totalCharges,
                     "amount_paid"      => 0.00,
-                    "consultation_fee" => 0.00,
-                    "lab_total"        => 0.00,
+                    // Totals preserved by BillingService
                     "pharmacy_total"   => $totalCharges,
                 ]
             );
 
             if (!$hasPending) {
-                $prescription->encounter->update(['status' => 'discharged']);
+                $prescription->encounter->update(['status' => 'waiting_billing']);
             }
         });
 

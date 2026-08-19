@@ -94,3 +94,5 @@ Route::get('/print_pdf/{id}', [HomeController::class, 'print_pdf'])->name('print
 });
 
 require __DIR__ . '/auth.php';
+
+Route::put('/lab/order/{id}', [\App\Http\Controllers\LabController::class, 'update'])->name('lab.update')->middleware(['auth']);

@@ -21,14 +21,31 @@ class Encounter extends Model
         return $this->hasMany(Vital::class);
     }
 
+    public function triage()
+    {
+        return class_exists(Triage::class)
+            ? $this->hasOne(Triage::class)
+            : $this->hasOne(Vital::class);
+    }
+
     public function consultations()
     {
         return $this->hasMany(Consultation::class);
     }
 
+    public function consultation()
+    {
+        return $this->hasOne(Consultation::class);
+    }
+
     public function prescriptions()
     {
         return $this->hasMany(Prescription::class);
+    }
+
+    public function prescription()
+    {
+        return $this->hasOne(Prescription::class);
     }
 
     public function labOrders()

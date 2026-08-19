@@ -70,7 +70,7 @@ class BillingService
         if ($invoice->amount_paid >= $totalAmount && $totalAmount > 0) {
             $status = 'paid';
         } elseif ($invoice->amount_paid > 0 && $invoice->amount_paid < $totalAmount) {
-            $status = 'partial';
+            $status = 'partially_paid';
         } elseif ($totalAmount > 0 && $invoice->amount_paid == 0) {
             $status = 'unpaid';
         }
